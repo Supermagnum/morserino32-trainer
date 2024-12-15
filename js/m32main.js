@@ -19,6 +19,9 @@ const { QsoTrainerUI } = require('./m32-qso-trainer');
 const { ConfigurationUI } = require('./m32-configuration-ui');
 const { CWMemoryUI } = require('./m32-cw-memory-ui');
 const { FileUploadUI } = require('./m32-file-upload-ui');
+const KochMorseTutor = require('./koch-morse-tutor');
+const kochTutor = new KochMorseTutor(morsePlayer, inputHandler);
+
 
 // let m32Protocolhandler;
 
@@ -38,6 +41,11 @@ const EVENT_MODE_SELECTED = "mode-selected";
 document.addEventListener('DOMContentLoaded', function() {
     new M32Main();
 }, false);
+
+// Add a button or menu item to start the Koch method training
+document.getElementById('startKochTraining').addEventListener('click', () => {
+    kochTutor.startLesson();
+});
 
 class M32Main {
 
