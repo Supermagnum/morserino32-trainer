@@ -107,3 +107,19 @@ watchify js/m32main.js   -o js/bundle.js
 * Select Wifi  (/)
 * CW Generator
   * Voice output for results. How? e.g. Bravo missing, X-Ray wrong, ...
+
+ ### Modifications coming:
+
+* Modified Koch training method:
+Mode example: First the program sends a series of K's in CW for 30 seconds while the character K is displayed. 
+Then it repeats the procedure with the character M. When that is complete it sends a five characters group using K and M in random places without displaying the signs. It then waits for a five characters input using the keyboard or the morse device, shows the characters you have gotten correct in green, the wrong ones in red.
+
+That continues until the user has gotten 90 % correct of a number of groups, then a new letter is automatically  introduced ( for example X ), it is sent for 30 seconds while the character is displayed. Then the lesson continues using the new character until 90% of groups is correct, a new character or prosign is introduced and the lessons continues until all characters are learned.
+
+When that function works I might implement the functions mentioned in these files:
+https://github.com/Supermagnum/morserino32-trainer/tree/main/todo
+
+with help of TABNINES AI,- because I have a neurological condition that makes it impossible for me to understand programming.
+ 
+
+  
