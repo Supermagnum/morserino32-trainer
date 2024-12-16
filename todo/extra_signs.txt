@@ -1,0 +1,99 @@
+How do I add the options to learn extra signs like Æ Ø Å @  _    $ - +  Ĝ Ś Þ Ź  = ; :  ( )  ! /  Ĵ ' to koch-morse-tutor.js ?  I also want a option to turn these on with toggles.
+
+Tabnine
+Claude 3.5 Sonnet
+To add options for learning extra signs like Æ, Ø, Å, @, _, $, -, +, Ĝ, Ś, Þ, Ź, =, ;, :, (, ), !, /, Ĵ, and ' to the koch-morse-tutor.js file, and to provide toggles for turning these on and off, you'll need to make several modifications. Here's a step-by-step guide on how to implement this:
+
+1.
+First, let's modify the koch-morse-tutor.js file to include these extra signs:
+
+
+koch-morse-tutor.js
+// Add this near the top of the file, where other constants are defined
+const EXTRA_SIGNS = 'ÆØÅŦ@_$-+ĜŚÞŹ=;:()!/Ĵ\'';
+
+// Modify the KOCH_CHARS constant to include the extra signs
+const KOCH_CHARS = 'KMRSUAPTLOWI.NJEFC0Y,VG5/Q9ZH38B?427C1D6X';
+
+// Create a new array to hold the enabled extra signs
+let enabledExtraSigns = [];
+
+// Modify the getAvailableChars function to include extra signs
+function getAvailableChars(level) {
+    let chars = KOCH_CHARS.substring(0, level);
+    return chars + enabledExtraSigns.join('');
+}
+
+// Add a new function to toggle extra signs
+function toggleExtraSign(sign) {
+    const index = enabledExtraSigns.indexOf(sign);
+    if (index === -1) {
+        enabledExtraSigns.push(sign);
+    } else {
+        enabledExtraSigns.splice(index, 1);
+    }
+    updateExtraSignsUI();
+    // You might want to call a function here to update the current lesson
+    // based on the new available characters
+}
+
+// Add a function to update the UI for extra signs
+function updateExtraSignsUI() {
+    const container = document.getElementById('extraSignsContainer');
+    container.innerHTML = '';
+    for (let sign of EXTRA_SIGNS) {
+        const button = document.createElement('button');
+        button.textContent = sign;
+        button.classList.add('btn', 'btn-sm', 'mr-1', 'mb-1');
+        button.classList.toggle('btn-primary', enabledExtraSigns.includes(sign));
+        button.classList.toggle('btn-secondary', !enabledExtraSigns.includes(sign));
+        button.addEventListener('click', () => toggleExtraSign(sign));
+        container.appendChild(button);
+    }
+}
+
+// Call this function when the page loads
+document.addEventListener('DOMContentLoaded', updateExtraSignsUI);
+
+
+2.
+Next, you'll need to modify your HTML file to include a container for the extra signs toggles. Add this to your HTML file where you want the toggles to appear:
+
+
+index.html
+<div class="form-group">
+    <label for="extraSignsContainer">Extra Signs:</label>
+    <div id="extraSignsContainer"></div>
+</div>
+Apply
+Insert
+Copy
+New file
+
+3.
+You might also want to add some CSS to style the extra signs toggles. Add this to your CSS file or in a 
+<style>
+
+ tag in your HTML:
+
+index.html
+#extraSignsContainer button {
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+Apply
+Insert
+Copy
+New file
+
+4.
+Finally, you'll need to modify any functions that generate characters for lessons or tests to use the new getAvailableChars function instead of directly accessing KOCH_CHARS. For example:
+
+index.html
+function generateLesson(level) {
+    const availableChars = getAvailableChars(level);
+    // Use availableChars to generate the lesson...
+}
+
+
+These changes will add the extra signs to your Koch Morse Tutor, allow users to toggle them on and off, and include them in lessons when they're enabled. Remember to test thoroughly after making these changes to ensure everything works as expected.
