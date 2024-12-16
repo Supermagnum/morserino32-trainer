@@ -12,6 +12,7 @@ class KochMorseTutor {
         this.userProgress = this.loadProgress();
         this.characterDisplay = document.getElementById('currentCharacter');
         this.resultDisplay = document.getElementById('groupResult');
+        this.farnsworthTiming = 1000; // Add this line to define farnsworthTiming
     }
 
     showTutorDisplay(show) {
@@ -181,32 +182,34 @@ resetPracticeSession() {
     }
 
     displayResults(correct, user) {
-        this.resultDisplay.innerHTML = ''; // Clear previous results
+    this.resultDisplay.innerHTML = ''; // Clear previous results
 
-        for (let i = 0; i < correct.length; i++) {
-            const span = document.createElement('span');
-            span.textContent = user[i] || ' ';
-            
-            if (user[i] === correct[i]) {
-                span.style.color = 'green';
-            } else {
-                span.style.color = 'red';
-            }
-
-            span.style.fontSize = '24px';
-            span.style.marginRight = '5px';
-            this.resultDisplay.appendChild(span);
+    for (let i = 0; i < correct.length; i++) {
+        const span = document.createElement('span');
+        span.textContent = user[i] || ' ';
+        
+        if (user[i] === correct[i]) {
+            span.style.color = 'green';
+        } else {
+            span.style.color = 'red';
         }
 
-        // Display the correct answer if there were any mistakes
-        if (correct !== user) {
-            const correctAnswer = document.createElement('div');
-            correctAnswer.textContent = `Correct: ${correct}`;
-            correctAnswer.style.marginTop = '10px';
-            this.resultDisplay.appendChild(correctAnswer);
-        }
+        span.style.fontSize = '24px';
+        span.style.marginRight = '5px';
+        this.resultDisplay.appendChild(span);
+    }
 
-        updateProgress() {
+    if (correct !== user) {
+        const correctAnswer = document.createElement('div');
+        correctAnswer.textContent = `Correct: ${correct}`;
+        correctAnswer.style.marginTop = '10px';
+        this.resultDisplay.appendChild(correctAnswer);
+    }
+
+    this.updateProgress();
+}
+
+updateProgress() {
     const progressPercentage = (this.correctGroups / this.totalGroups) * 100 || 0;
     const progressElement = document.createElement('div');
     progressElement.textContent = `Progress: ${progressPercentage.toFixed(2)}% (${this.correctGroups}/${this.totalGroups})`;
@@ -218,6 +221,11 @@ resetPracticeSession() {
 
 
     displayResults(correct, user) {
+        if (!this.resultDisplay) {
+            log.error("Result display element not found");
+            return;
+        }
+
         this.resultDisplay.innerHTML = ''; // Clear previous results
 
         for (let i = 0; i < correct.length; i++) {
@@ -233,15 +241,24 @@ resetPracticeSession() {
             span.style.fontSize = '24px';
             span.style.marginRight = '5px';
             this.resultDisplay.appendChild(span);
-    }
+        }
 
         if (correct !== user) {
             const correctAnswer = document.createElement('div');
             correctAnswer.textContent = `Correct: ${correct}`;
             correctAnswer.style.marginTop = '10px';
             this.resultDisplay.appendChild(correctAnswer);
+        }
+
+        this.updateProgress();
     }
-    
+
+    updateProgress() {
+        const progressPercentage = (this.correctGroups / this.totalGroups) * 100 || 0;
+        const progressElement = document.createElement('div');
+        progressElement.textContent = `Progress: ${progressPercentage.toFixed(2)}% (${this.correctGroups}/${this.totalGroups})`;
+        this.resultDisplay.appendChild(progressElement);
+    }
 
     loadProgress() {
         const progress = localStorage.getItem('kochMorseTutorProgress');
