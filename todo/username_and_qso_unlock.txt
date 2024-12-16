@@ -292,7 +292,7 @@ m32-qso-trainer.js - 466-472
 4. 
 m32-echo-trainer-ui.js - 59-75
 
-krbjhvee@online.no
+
 How can I ensure that the user's progress, time spent, and struggling characters are saved and can be recalled later?
 Tabnine
 Claude 3.5 Sonnet
