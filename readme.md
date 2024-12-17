@@ -117,10 +117,12 @@ Then it repeats the procedure with the character M. When that is complete it sen
 * That continues until the user has gotten 90 % correct of a number of groups, then a new letter is automatically  introduced ( for example X ), it is sent for 30 seconds while the character is displayed.
 * Then the lesson continues using the new character until 90% of groups is correct, a new character or prosign is introduced and the lessons continues until all characters are learned.
 
-* When that function works I might implement the functions mentioned in these files:
+* When that function works I might implement:
 * Create a database so it can store the username,user location and maidenhead location, statistics on characters learned, time used.
-* show what characters the user is struggling with, these can be selected for practice.
+* Post user progress and statistics to https://lcwo.net/ if possible.
+* Show what characters the user is struggling with, these can be selected for practice.
 * Enable the qso trainer when all characters have been learned.
+* Modify the qso trainer to use the users callsign,home location and maidenhead.
 * The possibility to connect the application to Discord,Mumble or other low latency voice chat programs.
 This looks like a good alternative:
 https://sites.google.com/site/icwoip
@@ -131,7 +133,7 @@ as It will simulate radio propagation.
 * Support for pipewire:
 https://www.pipewire.org/
 Opera Web browser is compatible with pipewire.
-* Suggestions for implementation of the functions:
+* Programming suggestions for implementation of the functions:
 https://github.com/Supermagnum/morserino32-trainer/tree/main/todo
 
 Written with help of TABNINES AI,- because I have a neurological condition that makes it impossible for me to understand programming.
