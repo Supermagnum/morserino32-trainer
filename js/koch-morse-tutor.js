@@ -12,12 +12,20 @@ class KochMorseTutor {
         this.userProgress = this.loadProgress();
         this.characterDisplay = document.getElementById('currentCharacter');
         this.resultDisplay = document.getElementById('groupResult');
-        this.farnsworthTiming = 1000; // Add this line to define farnsworthTiming
+        this.farnsworthTiming = 1000;
+        this.speed = 15;
+        this.speedControl = document.getElementById('speedControl');
+        this.speedDisplay = document.getElementById('speedDisplay');
+        this.initSpeedControl();
     }
 
     showTutorDisplay(show) {
         const display = document.getElementById('kochTutorDisplay');
-        display.style.display = show ? 'block' : 'none';
+        if (display) {
+            display.style.display = show ? 'block' : 'none';
+        } else {
+            log.error("Tutor display element not found");
+        }
     }
 
     async startLesson() {
@@ -27,7 +35,6 @@ class KochMorseTutor {
             await this.introduceNewCharacter();
             await this.practiceCurrentLesson();
             
-            // Check if the user wants to continue
             if (!await this.confirmContinue()) {
                 break;
             }
@@ -43,15 +50,29 @@ class KochMorseTutor {
     }
 
     async confirmContinue() {
-        // This method can be implemented to ask the user if they want to continue
-        // For now, we'll just return true
-        return true;
+        return new Promise((resolve) => {
+            const continueButton = document.createElement('button');
+            continueButton.textContent = 'Continue to next character';
+            continueButton.onclick = () => {
+                continueButton.remove();
+                resolve(true);
+            };
+
+            const stopButton = document.createElement('button');
+            stopButton.textContent = 'Stop for now';
+            stopButton.onclick = () => {
+                stopButton.remove();
+                resolve(false);
+            };
+
+            this.resultDisplay.appendChild(continueButton);
+            this.resultDisplay.appendChild(stopButton);
+        });
     }
 
     endLesson() {
         this.showTutorDisplay(false);
         this.saveProgress();
-        // Any other cleanup code can go here
     }
 
     async introduceNewCharacter() {
@@ -60,10 +81,8 @@ class KochMorseTutor {
         log.info(`Introducing new character: ${newChar}`);
         this.resultDisplay.innerHTML = '';
         
-        // Display the character
         this.displayCharacter(newChar);
         
-        // Send the character in CW for 30 seconds
         const startTime = Date.now();
         while (Date.now() - startTime < 30000) {
             await this.morsePlayer.playMorse(newChar);
@@ -71,73 +90,67 @@ class KochMorseTutor {
         }
     }
 
+    initSpeedControl() {
+        if (this.speedControl && this.speedDisplay) {
+            this.speedControl.min = 15;
+            this.speedControl.value = this.speed;
+            this.speedDisplay.textContent = this.speed;
+            this.speedControl.addEventListener('input', () => {
+                this.setSpeed(parseInt(this.speedControl.value));
+            });
+        } else {
+            log.error("Speed control elements not found");
+        }
+    }
 
-    async confirmContinue() {
-    return new Promise((resolve) => {
-        const continueButton = document.createElement('button');
-        continueButton.textContent = 'Continue to next character';
-        continueButton.onclick = () => {
-            continueButton.remove();
-            resolve(true);
-        };
+    setSpeed(newSpeed) {
+        if (newSpeed >= 15) {
+            this.speed = newSpeed;
+            this.speedDisplay.textContent = this.speed;
+            this.farnsworthTiming = Math.max(0, 1000 - (this.speed - 15) * 50);
+            if (this.m32CommunicationService) {
+                this.m32CommunicationService.sendM32Command(`PUT speed/${this.speed}`, false);
+            }
+        }
+    }
 
-        const stopButton = document.createElement('button');
-        stopButton.textContent = 'Stop for now';
-        stopButton.onclick = () => {
-            stopButton.remove();
-            resolve(false);
-        };
-
-        this.resultDisplay.appendChild(continueButton);
-        this.resultDisplay.appendChild(stopButton);
-    });
-}
- 
-      
-          
     async practiceCurrentLesson() {
-    const maxAttempts = 30;
-    let attempts = 0;
+        const maxAttempts = 30;
+        let attempts = 0;
 
-    while ((this.correctGroups / this.totalGroups < 0.9 || this.totalGroups < 10) && attempts < maxAttempts) {
-        attempts++;
-        const group = this.generateRandomGroup();
-        log.info(`Practice group: ${group}`);
-        
-        // Play the group without displaying
-        for (let char of group) {
-            await this.morsePlayer.playMorse(char);
-            await new Promise(resolve => setTimeout(resolve, this.farnsworthTiming));
+        while ((this.correctGroups / this.totalGroups < 0.9 || this.totalGroups < 10) && attempts < maxAttempts) {
+            attempts++;
+            const group = this.generateRandomGroup();
+            log.info(`Practice group: ${group}`);
+            
+            for (let char of group) {
+                try {
+                    await this.morsePlayer.playMorse(char, this.speed);
+                    await new Promise(resolve => setTimeout(resolve, this.farnsworthTiming));
+                } catch (error) {
+                    log.error(`Error playing morse for character ${char}: ${error}`);
+                }
+            }
+
+            const userInput = await this.inputHandler.getUserInput(5);
+
+            this.displayResults(group, userInput);
+
+            this.totalGroups++;
+            if (group === userInput) {
+                this.correctGroups++;
+            }
         }
 
-        // Wait for user input
-        const userInput = await this.inputHandler.getUserInput(5);
-
-        // Compare and display results
-        this.displayResults(group, userInput);
-
-        this.totalGroups++;
-        if (group === userInput) {
-            this.correctGroups++;
+        if (attempts >= maxAttempts) {
+            log.info("Maximum attempts reached. Resetting practice session.");
+            this.resetPracticeSession();
         }
     }
 
-    if (attempts >= maxAttempts) {
-        log.info("Maximum attempts reached. Resetting practice session.");
-        this.resetPracticeSession();
-    }
-}
-
-resetPracticeSession() {
-    this.totalGroups = 0;
-    this.correctGroups = 0;
-    // You might want to consider resetting other relevant properties here
-    // For example, you might want to reduce the current lesson difficulty
-    // this.currentLesson = this.currentLesson.slice(0, Math.max(2, this.currentLesson.length - 1));
-}
-
-
-       
+    resetPracticeSession() {
+        this.totalGroups = 0;
+        this.correctGroups = 0;
     }
 
     generateRandomGroup() {
@@ -148,77 +161,16 @@ resetPracticeSession() {
         return group;
     }
 
-    async playAndCheckGroup(group) {
-        // Play the group without displaying
-        for (let char of group) {
-            await this.morsePlayer.playMorse(char);
-        }
-
-        // Wait for user input
-        const userInput = await this.inputHandler.getUserInput(this.groupSize);
-
-        // Compare and display results
-        this.displayResults(group, userInput);
-
-        this.totalGroups++;
-        if (group === userInput) {
-            this.correctGroups++;
-        }
-    }
-
-resetPracticeSession() {
-    this.totalGroups = 0;
-    this.correctGroups = 0;
-    // You might want to consider resetting other relevant properties here
-    // For example, you might want to reduce the current lesson difficulty
-    // this.currentLesson = this.currentLesson.slice(0, Math.max(2, this.currentLesson.length - 1));
-}
-
     displayCharacter(char) {
-        this.characterDisplay.textContent = char;
-        this.characterDisplay.style.fontSize = '48px';
-        this.characterDisplay.style.fontWeight = 'bold';
-        this.characterDisplay.style.marginBottom = '20px';
-    }
-
-    displayResults(correct, user) {
-    this.resultDisplay.innerHTML = ''; // Clear previous results
-
-    for (let i = 0; i < correct.length; i++) {
-        const span = document.createElement('span');
-        span.textContent = user[i] || ' ';
-        
-        if (user[i] === correct[i]) {
-            span.style.color = 'green';
+        if (this.characterDisplay) {
+            this.characterDisplay.textContent = char;
+            this.characterDisplay.style.fontSize = '48px';
+            this.characterDisplay.style.fontWeight = 'bold';
+            this.characterDisplay.style.marginBottom = '20px';
         } else {
-            span.style.color = 'red';
+            log.error("Character display element not found");
         }
-
-        span.style.fontSize = '24px';
-        span.style.marginRight = '5px';
-        this.resultDisplay.appendChild(span);
     }
-
-    if (correct !== user) {
-        const correctAnswer = document.createElement('div');
-        correctAnswer.textContent = `Correct: ${correct}`;
-        correctAnswer.style.marginTop = '10px';
-        this.resultDisplay.appendChild(correctAnswer);
-    }
-
-    this.updateProgress();
-}
-
-updateProgress() {
-    const progressPercentage = (this.correctGroups / this.totalGroups) * 100 || 0;
-    const progressElement = document.createElement('div');
-    progressElement.textContent = `Progress: ${progressPercentage.toFixed(2)}% (${this.correctGroups}/${this.totalGroups})`;
-    this.resultDisplay.appendChild(progressElement);
-}
-    }
-
-
-
 
     displayResults(correct, user) {
         if (!this.resultDisplay) {
@@ -226,18 +178,13 @@ updateProgress() {
             return;
         }
 
-        this.resultDisplay.innerHTML = ''; // Clear previous results
+        this.resultDisplay.innerHTML = '';
 
         for (let i = 0; i < correct.length; i++) {
             const span = document.createElement('span');
             span.textContent = user[i] || ' ';
             
-            if (user[i] === correct[i]) {
-                span.style.color = 'green';
-            } else {
-                span.style.color = 'red';
-            }
-
+            span.style.color = user[i] === correct[i] ? 'green' : 'red';
             span.style.fontSize = '24px';
             span.style.marginRight = '5px';
             this.resultDisplay.appendChild(span);
