@@ -1,99 +1,120 @@
-How do I add the options to learn extra signs like Æ Ø Å @  _    $ - +  Ĝ Ś Þ Ź  = ; :  ( )  ! /  Ĵ ' to koch-morse-tutor.js ?  I also want a option to turn these on with toggles.
-
-Tabnine
-Claude 3.5 Sonnet
-To add options for learning extra signs like Æ, Ø, Å, @, _, $, -, +, Ĝ, Ś, Þ, Ź, =, ;, :, (, ), !, /, Ĵ, and ' to the koch-morse-tutor.js file, and to provide toggles for turning these on and off, you'll need to make several modifications. Here's a step-by-step guide on how to implement this:
+To add extra signs and provide options to toggle them on/off in the Koch Morse Tutor, you'll need to make several modifications to the koch-morse-tutor.js file. Here's how you can implement this feature:
 
 1.
-First, let's modify the koch-morse-tutor.js file to include these extra signs:
+First, let's add the extra signs to the class and create a method to update the lesson characters.
+2.
+Then, we'll add toggle controls for each group of extra signs.
+3.
+Finally, we'll update the UI initialization to handle these new toggles.
+
+
+Here's the implementation:
 
 
 koch-morse-tutor.js
-// Add this near the top of the file, where other constants are defined
-const EXTRA_SIGNS = 'ÆØÅŦ@_$-+ĜŚÞŹ=;:()!/Ĵ\'';
+class KochMorseTutor {
+    constructor(morsePlayer, inputHandler) {
+        // ... existing constructor code ...
 
-// Modify the KOCH_CHARS constant to include the extra signs
-const KOCH_CHARS = 'KMRSUAPTLOWI.NJEFC0Y,VG5/Q9ZH38B?427C1D6X';
+        this.baseCharacters = 'KMRSUAPTLOWI.NJEF0Y,VG5/Q9ZH38B?427C1D6X';
+        this.extraNordic = 'ÆØÅ';
+        this.extraSymbols = '@_$-+';
+        this.extraDiacritics = 'ĜŚÞŹ';
+        this.extraPunctuation = '=;:()!/';
+        this.extraMisc = "Ĵ'";
 
-// Create a new array to hold the enabled extra signs
-let enabledExtraSigns = [];
+        this.lessonCharacters = this.baseCharacters;
 
-// Modify the getAvailableChars function to include extra signs
-function getAvailableChars(level) {
-    let chars = KOCH_CHARS.substring(0, level);
-    return chars + enabledExtraSigns.join('');
-}
+        // Add new toggle elements
+        this.nordicToggleElement = document.getElementById('nordicToggle');
+        this.symbolsToggleElement = document.getElementById('symbolsToggle');
+        this.diacriticsToggleElement = document.getElementById('diacriticsToggle');
+        this.punctuationToggleElement = document.getElementById('punctuationToggle');
+        this.miscToggleElement = document.getElementById('miscToggle');
 
-// Add a new function to toggle extra signs
-function toggleExtraSign(sign) {
-    const index = enabledExtraSigns.indexOf(sign);
-    if (index === -1) {
-        enabledExtraSigns.push(sign);
-    } else {
-        enabledExtraSigns.splice(index, 1);
+        this.initializeUI();
     }
-    updateExtraSignsUI();
-    // You might want to call a function here to update the current lesson
-    // based on the new available characters
-}
 
-// Add a function to update the UI for extra signs
-function updateExtraSignsUI() {
-    const container = document.getElementById('extraSignsContainer');
-    container.innerHTML = '';
-    for (let sign of EXTRA_SIGNS) {
-        const button = document.createElement('button');
-        button.textContent = sign;
-        button.classList.add('btn', 'btn-sm', 'mr-1', 'mb-1');
-        button.classList.toggle('btn-primary', enabledExtraSigns.includes(sign));
-        button.classList.toggle('btn-secondary', !enabledExtraSigns.includes(sign));
-        button.addEventListener('click', () => toggleExtraSign(sign));
-        container.appendChild(button);
+    initializeUI() {
+        // ... existing initializeUI code ...
+
+        // Add event listeners for new toggles
+        if (this.nordicToggleElement) {
+            this.nordicToggleElement.addEventListener('change', () => this.updateLessonCharacters());
+        }
+        if (this.symbolsToggleElement) {
+            this.symbolsToggleElement.addEventListener('change', () => this.updateLessonCharacters());
+        }
+        if (this.diacriticsToggleElement) {
+            this.diacriticsToggleElement.addEventListener('change', () => this.updateLessonCharacters());
+        }
+        if (this.punctuationToggleElement) {
+            this.punctuationToggleElement.addEventListener('change', () => this.updateLessonCharacters());
+        }
+        if (this.miscToggleElement) {
+            this.miscToggleElement.addEventListener('change', () => this.updateLessonCharacters());
+        }
     }
+
+    updateLessonCharacters() {
+        this.lessonCharacters = this.baseCharacters;
+        if (this.nordicToggleElement && this.nordicToggleElement.checked) {
+            this.lessonCharacters += this.extraNordic;
+        }
+        if (this.symbolsToggleElement && this.symbolsToggleElement.checked) {
+            this.lessonCharacters += this.extraSymbols;
+        }
+        if (this.diacriticsToggleElement && this.diacriticsToggleElement.checked) {
+            this.lessonCharacters += this.extraDiacritics;
+        }
+        if (this.punctuationToggleElement && this.punctuationToggleElement.checked) {
+            this.lessonCharacters += this.extraPunctuation;
+        }
+        if (this.miscToggleElement && this.miscToggleElement.checked) {
+            this.lessonCharacters += this.extraMisc;
+        }
+        log.info(`Updated lesson characters: ${this.lessonCharacters}`);
+    }
+
+    // ... rest of the class methods ...
 }
 
-// Call this function when the page loads
-document.addEventListener('DOMContentLoaded', updateExtraSignsUI);
+module.exports = KochMorseTutor;
+
+Now, you need to update your HTML file to include the toggle controls. Add the following HTML elements to your page:
 
 
-2.
-Next, you'll need to modify your HTML file to include a container for the extra signs toggles. Add this to your HTML file where you want the toggles to appear:
-
-
-index.html
-<div class="form-group">
-    <label for="extraSignsContainer">Extra Signs:</label>
-    <div id="extraSignsContainer"></div>
+serialtest.html
+<div class="extra-characters-toggles">
+    <label>
+        <input type="checkbox" id="nordicToggle"> Include Nordic characters (Æ Ø Å)
+    </label>
+    <label>
+        <input type="checkbox" id="symbolsToggle"> Include Symbols (@ _ $ - +)
+    </label>
+    <label>
+        <input type="checkbox" id="diacriticsToggle"> Include Diacritics (Ĝ Ś Þ Ź)
+    </label>
+    <label>
+        <input type="checkbox" id="punctuationToggle"> Include Punctuation (= ; : ( ) ! /)
+    </label>
+    <label>
+        <input type="checkbox" id="miscToggle"> Include Miscellaneous (Ĵ ')
+    </label>
 </div>
-Apply
-Insert
-Copy
-New file
 
+These changes will:
+
+1.
+Add the extra characters to separate groups in the KochMorseTutor class.
+2.
+Create a new method updateLessonCharacters() that updates the lessonCharacters based on which toggles are checked.
 3.
-You might also want to add some CSS to style the extra signs toggles. Add this to your CSS file or in a 
-<style>
-
- tag in your HTML:
-
-index.html
-#extraSignsContainer button {
-    margin-right: 5px;
-    margin-bottom: 5px;
-}
-Apply
-Insert
-Copy
-New file
-
+Add event listeners for the new toggle controls in the initializeUI() method.
 4.
-Finally, you'll need to modify any functions that generate characters for lessons or tests to use the new getAvailableChars function instead of directly accessing KOCH_CHARS. For example:
-
-index.html
-function generateLesson(level) {
-    const availableChars = getAvailableChars(level);
-    // Use availableChars to generate the lesson...
-}
+Provide HTML toggle controls for each group of extra characters.
 
 
-These changes will add the extra signs to your Koch Morse Tutor, allow users to toggle them on and off, and include them in lessons when they're enabled. Remember to test thoroughly after making these changes to ensure everything works as expected.
+With these modifications, users will be able to toggle on/off different groups of extra characters, and the Koch Morse Tutor will include these characters in the lessons when their respective toggles are activated.
+
+Remember to style the new toggle controls in your CSS to match the rest of your application's design.
