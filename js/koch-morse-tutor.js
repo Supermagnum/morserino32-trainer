@@ -16,6 +16,11 @@ class KochMorseTutor {
         this.speedControlElement = document.getElementById('speedControl');
         this.speedDisplayElement = document.getElementById('speedDisplay');
 
+        // Flexible pause settings
+        this.standardPause = 1; // Standard pause between characters at high speeds (in seconds)
+        this.maxPause = 5; // Maximum pause at low speeds (in seconds)
+        this.transitionSpeed = 18; // WPM at which we reach standard pause
+
         this.initializeUI();
     }
 
@@ -75,11 +80,23 @@ class KochMorseTutor {
 
     setSpeed(speed) {
         this.speed = speed;
+        const pause = this.calculatePause(speed);
         this.morsePlayer.setWpm(speed);
+        this.morsePlayer.setCharacterPause(pause);
         if (this.speedDisplayElement) {
             this.speedDisplayElement.textContent = speed;
         }
-        log.info(`Speed set to ${speed} WPM`);
+        log.info(`Speed set to ${speed} WPM, character pause: ${pause.toFixed(2)} seconds`);
+    }
+
+    calculatePause(speed) {
+        if (speed >= this.transitionSpeed) {
+            return this.standardPause;
+        } else {
+            // Linear interpolation between maxPause and standardPause
+            const factor = (this.transitionSpeed - speed) / this.transitionSpeed;
+            return this.standardPause + (this.maxPause - this.standardPause) * factor;
+        }
     }
 
     setGroupSize(size) {
