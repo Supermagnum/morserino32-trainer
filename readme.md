@@ -110,12 +110,12 @@ watchify js/m32main.js   -o js/bundle.js
 
  ### Modifications coming:
 
-* Modified Koch training method:
+* Modified Koch training method, that not only trains receiving but also using a morse key at the same time!
 Mode example: First the program sends a series of K's in CW for 30 seconds while the character K is displayed. 
 Then it repeats the procedure with the character M. When that is complete it sends a five characters group using K and M in random places without displaying the signs. It then waits for a five characters input using the keyboard or the morse device, shows the characters you have gotten correct in green, the wrong ones in red.
 
 * That continues until the user has gotten 90 % correct of a number of groups, then a new letter is automatically  introduced ( for example X ), it is sent for 30 seconds while the character is displayed.
-* Then the lesson continues using the new character until 90% of groups is correct, a new character or prosign is introduced and the lessons continues until all characters are learned.
+* Then the lesson continues using the new character until 90% of groups is correct, a new character or prosign is introduced and the lessons continues until all characters are learned!
 
 * When that function works I might implement:
 * Create a database so it can store the username,user location and maidenhead location, statistics on characters learned, time used.
@@ -128,11 +128,12 @@ This looks like a good alternative:
 https://sites.google.com/site/icwoip
 * Realistic mode for the qso trainer and Discord,Mumble etc that adds white noise,static and QRM. This is not needed for 
 https://www.hamsphere.com/
-as It will simulate radio propagation.
+as it will simulate radio propagation.
 
 * Support for pipewire:
 https://www.pipewire.org/
 Opera Web browser is compatible with pipewire.
+
 * Programming suggestions for implementation of the functions:
 https://github.com/Supermagnum/morserino32-trainer/tree/main/todo
 
