@@ -117,7 +117,7 @@ Then it repeats the procedure with the character M. When that is complete it sen
 * That continues until the user has gotten 90 % correct of a number of groups, then a new letter is automatically  introduced ( for example X ), it is sent for 30 seconds while the character is displayed.
 * Then the lesson continues using the new character until 90% of groups is correct, a new character or prosign is introduced and the lessons continues until all characters are learned!
 
-* Flexible, speed-dependent pause between characters during Morse code practice. This allows beginners to start with longer pauses between characters (easier to process) and gradually reduce these pauses as they increase their speed, smoothly transitioning to standard Morse timing at higher speeds.
+* Flexible, speed-dependent pause between characters during Morse code practice. This allows beginners to start with longer pauses between characters (easier to process) and gradually reduce these pauses as they increase their speed, smoothly transitioning to standard Morse timing at higher speeds. This can be turned off.
 
 * When that function works I might implement:
 * Create a database so it can store the username,user location and maidenhead location, statistics on characters learned, time used.
