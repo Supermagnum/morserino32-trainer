@@ -548,7 +548,7 @@ A UI is provided to display user statistics and switch between users.
 
 Remember to test thoroughly, especially the persistence across page reloads and browser restarts. Also, consider adding error handling and data validation to ensure robustness.
 
-krbjhvee@online.no
+
 How can the user select the characters he is struggling with and train on those ?
 Tabnine
 Claude 3.5 Sonnet
