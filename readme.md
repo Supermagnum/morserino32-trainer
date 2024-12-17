@@ -113,6 +113,7 @@ watchify js/m32main.js   -o js/bundle.js
 * Modified Koch training method, that not only trains receiving but also using a morse key at the same time!
 Mode example: First the program sends a series of K's in CW for 30 seconds while the character K is displayed. 
 Then it repeats the procedure with the character M. When that is complete it sends a five characters group using K and M in random places without displaying the signs. It then waits for a five characters input using the keyboard or the morse device, shows the characters you have gotten correct in green, the wrong ones in red.
+* Flexible, speed-dependent pause between characters during Morse code practice. This allows beginners to start with longer pauses between characters (easier to process) and gradually reduce these pauses as they increase their speed, smoothly transitioning to standard Morse timing at higher speeds.
 
 * That continues until the user has gotten 90 % correct of a number of groups, then a new letter is automatically  introduced ( for example X ), it is sent for 30 seconds while the character is displayed.
 * Then the lesson continues using the new character until 90% of groups is correct, a new character or prosign is introduced and the lessons continues until all characters are learned!
