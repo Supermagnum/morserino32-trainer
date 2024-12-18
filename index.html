@@ -22,7 +22,7 @@
     <!--
         <link rel="manifest" href="manifest.webmanifest">
     -->
-    
+
     <style>
         .hidden {
             display: none;
@@ -149,21 +149,21 @@
         <script src="libs/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-    
+
     <div class="shadow-sm p-3 mb-2 bg-light">
         <h1>Morserino-32 CW Training</h1>
             <div class="row">
                 <div class="col-12 col-md-11">
                     <ul>
-                        <li>Compare the characters received from <a href="https://www.morserino.info" target="_blank">Morserino32</a> in "CW Generator" 
+                        <li>Compare the characters received from <a href="https://www.morserino.info" target="_blank">Morserino32</a> in "CW Generator"
                             mode with the decoded text you entered</li>
                         <li>or the text you keyed on the Morserino in "CW Keyer" mode with the text you want to key</li>
                         <li>Learn abbreviations in "Echo Trainer" mode showing the meaning of the abbreviations you keyed correctly</li>
                         <li>New/beta: Train QSOs: key your QSOs and a bot will answer.</li>
-                        <li>
+                        <li> Modified Koch training method, that not only trains receiving but also using a morse key at the same time!</li>
                             <a href="#" class="link-info" data-bs-toggle="collapse" data-bs-target="#collapseNews" aria-expanded="false" aria-controls="collapseNews">
                                 Show Latest News/Changes below
-                            </a>        
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -183,7 +183,7 @@
                 <div class="col-12 col-md-11">
                     <h3>Help</h3>
                 </div>
-                <div class="col-12 col-md-1">                            
+                <div class="col-12 col-md-1">
                     <button class="btn btn-outline-info btn-sm" style="margin-top: 4px" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHelp" aria-expanded="false" aria-controls="collapseHelp">
                         Close
                     </button>
@@ -191,8 +191,8 @@
             </div>
             <h4>Morserino Firmware Update</h4>
             <p>
-            Morserino Firmware needs to be 5.x to work with this page. Do an online in-browser firmware update 
-            at the <a href="https://www.morserino.info/flash.html" target="_blank">Morserino Flash Page</a>. 
+            Morserino Firmware needs to be 5.x to work with this page. Do an online in-browser firmware update
+            at the <a href="https://www.morserino.info/flash.html" target="_blank">Morserino Flash Page</a>.
             Please note that you have to disconnect on this page to allo a firmware flash!
             </p>
             <h4>CW Generator mode</h4>
@@ -215,7 +215,7 @@
 
             <h4>Echo/Abbreviations Trainer</h4>
             <p>
-                To learn CW-abbreviations set the Morserino to "Echo Trainer/Abbreviations". All correctly abbreviations 
+                To learn CW-abbreviations set the Morserino to "Echo Trainer/Abbreviations". All correctly abbreviations
                 that you keyed correctly show the abbreviation to easy learning the meaning.
             </p>
             <h4>QSO Trainer</h4>
@@ -245,10 +245,10 @@
             <p>
                 You might to do this for every stored snapshot profile you want to use!
             </p>
-            
+
             <h4>Serial Communication Driver Installation</h4>
             <p>
-            If you connect the Morserino to your PC/laptop and the device is detected, 
+            If you connect the Morserino to your PC/laptop and the device is detected,
             but no driver is found, you need to install the driver for your operating system
             from the <a href="https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers" target="_blank">Download section of the SiLab chip company</a>
             </p>
@@ -281,7 +281,7 @@
                 <div class="col-12 col-md-11">
                     <h3>News / Changes</h3>
                 </div>
-                <div class="col-12 col-md-1">                            
+                <div class="col-12 col-md-1">
                     <button class="btn btn-outline-info btn-sm" style="margin-top: 4px" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNews" aria-expanded="false" aria-controls="collapseNews">
                         Close
                     </button>
@@ -309,10 +309,10 @@
                 <li>2022-02-01: CW Generator: allow ignoring whitespace errors - thanks Christoph Wurzinger!</li>
                 <li>2022-01-23: CW Generator: allow loading result as text to key</li>
                 <li>2022-01-23: CW Generator: add auto hide feature during listening</li>
-                <li>2022-01-22: CW Generator: add success graph</li>                
-                <li>2022-12-22: CW Generator: much nicer layout by Ronald Knapp - Thanks!</li>                
-                <li>2022-11-30: CW Generator: difference between real and decoded text in color</li>                
-                <li>2022-11-28: CW Generator: first version / proof of concept</li>                
+                <li>2022-01-22: CW Generator: add success graph</li>
+                <li>2022-12-22: CW Generator: much nicer layout by Ronald Knapp - Thanks!</li>
+                <li>2022-11-30: CW Generator: difference between real and decoded text in color</li>
+                <li>2022-11-28: CW Generator: first version / proof of concept</li>
             </ul>
         </div>
     </div>
@@ -344,7 +344,7 @@
                     </div>
                 </div>
             </div>
-                
+
             <div class="col-4 m32-protocol container" id="m32state">
                 <div class="row" >
                     <div class="col text-end">
@@ -373,39 +373,43 @@
         <!-- tabs -->
         <ul class="nav nav-tabs" id="mainTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="cw-generator-tab" 
-                        data-bs-toggle="tab" data-bs-target="#cw-generator-tab-content" 
-                        type="button" role="tab" aria-controls="cw-generator-tab-content" 
+                <button class="nav-link active" id="cw-generator-tab"
+                        data-bs-toggle="tab" data-bs-target="#cw-generator-tab-content"
+                        type="button" role="tab" aria-controls="cw-generator-tab-content"
                         aria-selected="true">CW Generator / CW Keyer</button>
             </li>
+<li class="nav-item" role="presentation">
+    <button class="nav-link" id="koch-tab" data-bs-toggle="tab" data-bs-target="#koch" type="button" role="tab" aria-controls="koch" aria-selected="false">Koch Trainer</button>
+</li>
+
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="echo-trainer-tab" 
-                        data-bs-toggle="tab" data-bs-target="#echo-trainer-tab-content" 
-                        type="button" role="tab" aria-controls="echo-trainer-tab-content" 
+                <button class="nav-link" id="echo-trainer-tab"
+                        data-bs-toggle="tab" data-bs-target="#echo-trainer-tab-content"
+                        type="button" role="tab" aria-controls="echo-trainer-tab-content"
                         aria-selected="false">Echo Trainer</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="qso-trainer-tab" 
-                        data-bs-toggle="tab" data-bs-target="#qso-trainer-tab-content" 
-                        type="button" role="tab" aria-controls="qso-trainer-tab-content" 
+                <button class="nav-link" id="qso-trainer-tab"
+                        data-bs-toggle="tab" data-bs-target="#qso-trainer-tab-content"
+                        type="button" role="tab" aria-controls="qso-trainer-tab-content"
                         aria-selected="false">QSO Trainer (beta!)</button>
             </li>
             <li class="nav-item m32-protocol" role="presentation">
-                <button class="nav-link" id="m32-config-tab" data-bs-toggle="tab" 
-                        data-bs-target="#m32-config-tab-content" type="button" 
-                        role="tab" aria-controls="m32-config-tab-content" 
+                <button class="nav-link" id="m32-config-tab" data-bs-toggle="tab"
+                        data-bs-target="#m32-config-tab-content" type="button"
+                        role="tab" aria-controls="m32-config-tab-content"
                         aria-selected="false">M32 Config</button>
             </li>
             <li class="nav-item m32-protocol" role="presentation">
-                <button class="nav-link" id="m32-file-upload-tab" data-bs-toggle="tab" 
-                        data-bs-target="#m32-file-upload-tab-content" type="button" 
-                        role="tab" aria-controls="m32-file-upload-tab-content" 
+                <button class="nav-link" id="m32-file-upload-tab" data-bs-toggle="tab"
+                        data-bs-target="#m32-file-upload-tab-content" type="button"
+                        role="tab" aria-controls="m32-file-upload-tab-content"
                         aria-selected="false">M32 File Upload</button>
             </li>
                 <li class="nav-item m32-protocol" role="presentation">
-                    <button class="nav-link" id="m32-cw-memory-tab" data-bs-toggle="tab" 
-                    data-bs-target="#m32-cw-memory-tab-content" type="button" 
-                    role="tab" aria-controls="m32-cw-memory-tab-content" 
+                    <button class="nav-link" id="m32-cw-memory-tab" data-bs-toggle="tab"
+                    data-bs-target="#m32-cw-memory-tab-content" type="button"
+                    role="tab" aria-controls="m32-cw-memory-tab-content"
                     aria-selected="false">M32 CW Memory</button>
                 </li>
         </ul>
@@ -435,7 +439,7 @@
                         <input class="form-check-input" type="checkbox" checked id="autoHideCheckbox">
                         <label class="form-check-label" for="autoHideCheckbox">Auto hide during reception (between receiving 'vvv&lt;ka&gt;' and '+')</label>
                     </div>
-        
+
                     <div class="form-group">
                         <div id="morserino_detail" class="collapse show">
                             Received from Morserino:
@@ -443,28 +447,28 @@
                             <!--<textarea rows="3" cols="80" id="receiveText" spellcheck="false" placeholder="Here the characters received from Morserino are shown."></textarea>-->
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         Your Input:<br />
                         <textarea rows="3" cols="80" id="inputText" spellcheck="false" placeholder="Type here the letters you encode from Morserino"></textarea>
                     </div>
-        
+
                     <div>
                         <button id="clearAllButton" class="btn btn-outline-primary" title="Clear text received from Morserino, your input and the comparison result (for CW Generator mode)" data-bs-toggle="tooltip">Clear All</button>
                         <button id="clearReceivedButton" class="btn btn-outline-secondary" title="Clear only text received from Morserino and comparison result (for CW Keyer mode)" data-bs-toggle="tooltip">Clear Received Text and Result</button>
                     </div>
-        
+
                     <div id="resultComparison" class="mt-2 collapse show">
                         <div class="alert alert-secondary">
                             Result comparing Received/Input: <button id="compareTextsButton" style="display:none;">Compare</button>
                             <div id="inputComparator" class="result"></div>
-                            <div id="correctPercentage"></div> 
-        
+                            <div id="correctPercentage"></div>
+
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" id="ignoreWhitespaceCheckbox">
                                 <label class="form-check-label" for="ignoreWhitespaceCheckbox">Ignore whitespace during comparison</label>
                             </div>
-        
+
                             <div class="legend">
                                 You must have >= 90% to continue with the next letter.
                                 <ul>
@@ -488,7 +492,7 @@
                     <h3>Saved Results</h3>
                     <div id="savedResults"></div>
                 </div>
-        
+
                 <canvas id="savedResultChart" height="100"></canvas>
             </div> <!-- end cw generator -->
 
@@ -526,10 +530,10 @@
                             <th>Abbr.</th>
                             <th>English</th>
                             <th>German</th>
-                        </tr>  
+                        </tr>
                     </thead>
                     <tbody>
-                    </tbody>                  
+                    </tbody>
                 </table>
 
             </div> <!-- end echo trainer -->
@@ -556,7 +560,7 @@
                             <div class="col-12 col-md-11">
                                 <h4>CW Settings</h4>
                             </div>
-                            <div class="col-12 col-md-1">                            
+                            <div class="col-12 col-md-1">
                                 <button class="btn btn-outline-info btn-sm" style="margin-top: 4px" type="button" data-bs-toggle="collapse" data-bs-target="#collapseQsoSettings" aria-expanded="false" aria-controls="collapseQsoSettings">
                                     Close
                                 </button>
@@ -701,7 +705,7 @@
                         <div class="col-md-2">
                             <select class="form-select" id="m32-config-snapshots-select">
                             </select>
-                        </div>    
+                        </div>
                         <div class="col-md-5">
                             <button id="m32-config-snapshot-button-recall" class="btn btn-outline-primary" style="margin-top: 4px" type="button" disabled>
                                 Recall
@@ -726,7 +730,7 @@
                                 <option value="7">7</option>
                                 <option value="8">8</option>
                             </select>
-                        </div>    
+                        </div>
                         <div class="col-md-5">
                             <button id="m32-config-snapshot-button-store" class="btn btn-outline-primary" style="margin-top: 4px" type="button">
                                 Store
@@ -850,15 +854,13 @@
                     <div id="m32-config"></div>
                 </div>
 
-
-
                 <!-- test config element:
                 <div id="test-mapped" class="row">
                     <div class="col-md-6">
                         <h4>TestConfig Mapped</h4>
                         <p>Description of test config with very long description text and even longer and longer</p>
                     </div>
-                    <div class="col-md-4">                        
+                    <div class="col-md-4">
                         <select class="form-select">
                             <option value="1">Eins</option>
                             <option value="2" selected>Zwei</option>
@@ -872,7 +874,7 @@
                 <div id="m32-config-cw-school-graz" class="cw-school-graz">
                     <h3><i class="bi bi-music-note-beamed"></i> CW School Graz</h3>
                     <p>
-                        <a href="https://oe6.oevsv.at/referate/cwschule"><i class="bi bi-music-note-beamed"></i> CW School Graz</a> uses <a href="https://oe6.oevsv.at/export/sites/oe6/referate/cwschule/unterlagen/Morserino-32-Exercise-Plan-Matthew-Pullan.pdf">6 snapshots</a> (or <a href="https://oe6.oevsv.at/export/sites/oe6/referate/cwschule/unterlagen/Morserino-32-Uebungsplan.pdf">here</a> in german) for different lectures. 
+                        <a href="https://oe6.oevsv.at/referate/cwschule"><i class="bi bi-music-note-beamed"></i> CW School Graz</a> uses <a href="https://oe6.oevsv.at/export/sites/oe6/referate/cwschule/unterlagen/Morserino-32-Exercise-Plan-Matthew-Pullan.pdf">6 snapshots</a> (or <a href="https://oe6.oevsv.at/export/sites/oe6/referate/cwschule/unterlagen/Morserino-32-Uebungsplan.pdf">here</a> in german) for different lectures.
                         Here you can program these snapshots with one push of a button!
                     </p>
                     <p>
@@ -881,19 +883,19 @@
                             <li>
                                 <button id="m32-config-cw-school-setup-snaphot1-button" class="btn btn-outline-primary" style="margin-top: 4px" type="button">
                                     Setup Snapshot 1
-                                </button>            
+                                </button>
                                 Listening/Understanding: Koch Trainer, CW Generator, Random Single Letter
                             </li>
                             <li>
                                 <button id="m32-config-cw-school-setup-snaphot2-button" class="btn btn-outline-primary" style="margin-top: 4px" type="button">
                                     Setup Snapshot 2
-                                </button>            
+                                </button>
                                 Learn New Character: Koch Trainer, Select Lesson
                             </li>
                             <li>
                                 <button id="m32-config-cw-school-setup-snaphot3-button" class="btn btn-outline-primary" style="margin-top: 4px" type="button">
                                     Setup Snapshot 3
-                                </button>            
+                                </button>
                                 Listening/Sending: Koch Trainer, Echo Trainer, Adaptive Random
                             </li>
                             <li>
@@ -952,7 +954,7 @@
                 <div class="row">
                     <div class="col-md-8">
                         <textarea id="file-upload-content" name="file-upload-content" cols="80" rows="10">
-cq cq cq OE6YAW de OE6CHD pse k 
+cq cq cq OE6YAW de OE6CHD pse k
 my qth is graz graz =
 wx is sunny sunny =
 temp is 16C =
@@ -963,7 +965,7 @@ OE6YAW de OE6CHD kn
                         <h4>Load Texts</h4>
                         <ul id="upload-text-list">
                         </ul>
-                    </div>                    
+                    </div>
                     <div class="col-md-2">
                         <button id="m32-file-upload-upload-file-button" class="btn btn-info" style="margin-top: 4px" type="button"><i class="bi bi-box-arrow-up"></i> Upload File to M32</button>
                     </div>
@@ -1046,21 +1048,33 @@ OE6YAW de OE6CHD kn
                     <button class="btn btn-primary" type="button" id="m32-cw-memory-8-recall-button"><i class="bi bi-play-btn"></i> Play</button>
                 </div>
             </div> <!-- end m32 cw memory -->
-            
-        </div> <!-- end tab-content -->
+
+
+            <div class="tab-pane fade" id="koch" role="tabpanel" aria-labelledby="koch-tab">
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Koch Method Trainer</h3>
+            <div class="form-group">
+                <label for="kochSpeedControl">Speed (WPM):</label>
+                <input type="range" class="form-range" id="kochSpeedControl" min="5" max="30" step="1" value="15">
+                <span id="kochSpeedDisplay">15</span> WPM
+            </div>
+            <button id="toggleKochTrainer" class="btn btn-primary">Start Koch Trainer</button>
+        </div>
+        <div class="col-md-6">
+            <div id="kochDisplay" class="mt-3">
+                <h4>Current Character:</h4>
+                <div id="currentChar" class="display-1 text-center"></div>
+                <h4>Your Input:</h4>
+                <input type="text" id="kochInput" class="form-control" maxlength="1">
+                <div id="kochResult" class="mt-3"></div>
+            </div>
+        </div>
     </div>
-
-
-    <!-- FROM Tabnine  -->
-<button id="startKochTraining" class="btn btn-primary">Start Koch Method Training</button>
-<!-- Add these elements where appropriate in your HTML -->
-<div id="kochTutorDisplay">
-    <div id="currentCharacter"></div>
-    <div id="groupResult"></div>
 </div>
 
-
-
+        </div> <!-- end tab-content -->
+    </div>
 
     <!--
         Service worker disabled for the moment, as old bundle.js are used quite often instead of the new ones!
@@ -1075,7 +1089,7 @@ OE6YAW de OE6CHD kn
                         registration.unregister();
                     }
                 });
-                
+
                 // register service worker
                 // navigator.serviceWorker.register('sw.js')
                 //     .then(function () { console.log("Service worker registered"); });
