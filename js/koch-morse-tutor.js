@@ -8,6 +8,7 @@ class KochMorseTutor {
         this.inputHandler = inputHandler;
         this.currentLesson = 0;
         this.lessonCharacters = 'KMRSUAPTLOWI.NJEF0Y,VG5/Q9ZH38B?427C1D6X';
+        this.setSpeed(speed);
         this.speed = 15; // Default speed
         this.groupSize = 5; // Default group size
         this.displayElement = document.getElementById('kochTutorDisplay');
@@ -29,6 +30,17 @@ class KochMorseTutor {
         this.farnsworthSpeedDisplayElement = document.getElementById('farnsworthSpeedDisplay');
 
         this.initializeUI();
+
+        // sets speed of morse
+    setSpeed(speed) {
+        this.speed = speed;
+        this.dit = 1200 / speed;
+        this.dah = this.dit * 3;
+        this.pauseBetweenLetters = this.dit * 3;
+        this.pauseBetweenWords = this.dit * 7;
+        log.info(`Speed set to ${speed} WPM`);
+}
+
     }
 
     initializeUI() {

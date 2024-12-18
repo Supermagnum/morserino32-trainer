@@ -44,6 +44,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Add a button or menu item to start the Koch method training
 document.getElementById('startKochTraining').addEventListener('click', () => {
+     const speed = parseInt(document.getElementById('kochSpeed').value, 10);
+    kochTutor.setSpeed(speed);
     kochTutor.startLesson();
 });
 
