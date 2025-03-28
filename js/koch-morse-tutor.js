@@ -2,20 +2,25 @@
 
 const log = require('loglevel');
 
+const { EVENT_M32_TEXT_RECEIVED } = require('./m32-communication-service');
+
 class KochMorseTutor {
-    constructor(morsePlayer, inputHandler) {
-        this.morsePlayer = morsePlayer;
+    constructor(m32CommunicationService, inputHandler) {
+        this.morsePlayer = new jscw();
         this.inputHandler = inputHandler;
         this.currentLesson = 0;
         this.lessonCharacters = 'KMRSUAPTLOWI.NJEF0Y,VG5/Q9ZH38B?427C1D6X';
-        this.setSpeed(speed);
         this.speed = 15; // Default speed
         this.groupSize = 5; // Default group size
-        this.displayElement = document.getElementById('kochTutorDisplay');
-        this.currentCharElement = document.getElementById('currentCharacter');
-        this.groupResultElement = document.getElementById('groupResult');
-        this.speedControlElement = document.getElementById('speedControl');
-        this.speedDisplayElement = document.getElementById('speedDisplay');
+        this.displayElement = document.getElementById('kochDisplay');
+        this.currentCharElement = document.getElementById('currentChar');
+        this.groupResultElement = document.getElementById('kochResult');
+        this.speedControlElement = document.getElementById('kochSpeedControl');
+        this.speedDisplayElement = document.getElementById('kochSpeedDisplay');
+        this.displayOptionElement = document.getElementById('kochDisplayOption');
+        this.inputElement = document.getElementById('kochInput');
+
+        this.m32CommunicationService = m32CommunicationService;
 
         // Flexible pause settings
         this.standardPause = 1; // Standard pause between characters at high speeds (in seconds)
@@ -30,23 +35,18 @@ class KochMorseTutor {
         this.farnsworthSpeedDisplayElement = document.getElementById('farnsworthSpeedDisplay');
 
         this.initializeUI();
+        this.setMorseSpeed(this.speed);
 
-        // sets speed of morse
-    setSpeed(speed) {
-        this.speed = speed;
-        this.dit = 1200 / speed;
-        this.dah = this.dit * 3;
-        this.pauseBetweenLetters = this.dit * 3;
-        this.pauseBetweenWords = this.dit * 7;
-        log.info(`Speed set to ${speed} WPM`);
-}
-
+        this.activeMode = false;
     }
+
+            
 
     initializeUI() {
         if (this.speedControlElement) {
             this.speedControlElement.addEventListener('input', (event) => {
-                this.setSpeed(parseInt(event.target.value));
+                this.setMorseSpeed(parseInt(event.target.value));
+                this.speedDisplayElement.innerText = this.speedControlElement.value;
             });
         }
 
@@ -63,10 +63,22 @@ class KochMorseTutor {
         }
     }
 
+    // sets speed of morse
+    setMorseSpeed(speed) {
+        this.speed = speed;
+        this.dit = 1200 / speed;
+        this.dah = this.dit * 3;
+        this.pauseBetweenLetters = this.dit * 3;
+        this.pauseBetweenWords = this.dit * 7;
+        console.log(`Speed set to ${speed} WPM`);
+    }
+
     startLesson() {
-        log.info('Starting Koch Method lesson');
+        console.log('Starting Koch Method lesson');
         this.displayElement.style.display = 'block';
+        //this.morsePlayer.init();
         this.playNextGroup();
+        this.inputElement.focus();
     }
 
     async playNextGroup() {
@@ -74,16 +86,79 @@ class KochMorseTutor {
         for (let i = 0; i < this.groupSize; i++) {
             group += this.lessonCharacters[Math.floor(Math.random() * (this.currentLesson + 1))];
         }
+
+        let noKM = /[A-J]|[L]|[N-Z]/;
+        let noKMResult;
+
+        console.log(this.displayOptionElement.checked);
         
-        this.currentCharElement.textContent = group;
-        await this.morsePlayer.playMorse(group);
+        if(this.displayOptionElement.checked)
+        {
+            console.log("Hi!")
+            noKMResult = group.match(noKM);
+            this.currentCharElement.textContent = noKMResult;
+        }
+        //this.currentCharElement.textContent = group;
+        await this.morsePlayer.play(group);
         
-        const userInput = await this.inputHandler.getInput();
+        const userInput = await this.getInput();
+        console.log("Is this working?" + " "  + userInput);
         this.checkInput(group, userInput);
+        //debugger
+    }
+
+    textReceived(value) {
+        if (this.activeMode) {
+            this.inputElement.value += value;
+        }
+    }
+
+    getInput()
+    {
+        return new Promise((resolve) => {
+            const keyInputs = [];
+            this.inputElement.addEventListener('keydown', (event) => {
+                //debugger
+                const keyInput = event.key;
+                //let numInput = 0;
+                if(keyInput != 'Backspace' && keyInput != ' ' && keyInput != 'F1' && keyInput != 'F11')
+                {
+                    keyInputs.push(keyInput);
+                }
+                else
+                {
+                    event.preventDefault()
+                    return false;
+                }
+                let result = keyInputs.join("");
+                if(this.inputElement.value)
+                {
+                    this.inputElement.value = "";
+                }
+                if(result.length == 5)
+                {
+                    resolve(result);
+                }
+                
+
+                //const keyInput = event.key;
+                console.log(keyInput + ' was pressed!');
+                //resolve(console.log(keyInput + ' was pressed!'));
+                //resolve(keyInputs[numInput]);
+            })
+            //console.log(keyInputs);
+            this.inputElement.addEventListener('keyup', (e) => {
+                e = this.inputElement.setSelectionRange(0,0);
+            })
+
+            this.m32CommunicationService.addEventListener(EVENT_M32_TEXT_RECEIVED, this.textReceived.bind(this));
+        })
     }
 
     checkInput(expected, actual) {
+        //debugger
         let result = '';
+        console.log(expected.length);
         for (let i = 0; i < expected.length; i++) {
             if (i < actual.length) {
                 if (expected[i].toLowerCase() === actual[i].toLowerCase()) {
@@ -98,18 +173,19 @@ class KochMorseTutor {
         this.groupResultElement.innerHTML = result;
 
         if (expected.toLowerCase() === actual.toLowerCase()) {
-            log.info('Correct!');
-            if (Math.random() < 0.2) { // 20% chance to advance to next lesson
+            console.log('Correct!');
+            //if (Math.random() < 0.2) { // 20% chance to advance to next lesson
                 this.currentLesson = Math.min(this.currentLesson + 1, this.lessonCharacters.length - 1);
-            }
+            //}
         } else {
-            log.info('Incorrect. Try again.');
+            console.log('Incorrect. Try again.');
         }
         
         setTimeout(() => this.playNextGroup(), 3000); // Wait 3 seconds before next group
     }
 
     setSpeed(speed) {
+        //debugger
         this.speed = speed;
         const pause = this.calculatePause(speed);
         if (this.useFarnsworth) {
@@ -118,11 +194,11 @@ class KochMorseTutor {
         } else {
             this.morsePlayer.setWpm(speed);
         }
-        this.morsePlayer.setCharacterPause(pause);
+        //this.morsePlayer.setCharacterPause(pause);
         if (this.speedDisplayElement) {
             this.speedDisplayElement.textContent = speed;
         }
-        log.info(`Speed set to ${speed} WPM, character pause: ${pause.toFixed(2)} seconds, Farnsworth: ${this.useFarnsworth}`);
+        console.log(`Speed set to ${speed} WPM, character pause: ${pause.toFixed(2)} seconds, Farnsworth: ${this.useFarnsworth}`);
     }
 
     calculatePause(speed) {

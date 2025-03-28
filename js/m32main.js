@@ -9,7 +9,7 @@ const { M32CommunicationService } = require('./m32-communication-service');
 const { M32Storage } = require('./m32-storage');
 const { FileUploadUI } = require('./m32-file-upload-ui');
 const { CWMemoryUI } = require('./m32-cw-memory-ui');
-const { KochTutor } = require('./koch-morse-tutor');
+const KochMorseTutor = require('./koch-morse-tutor');
 let log = require("loglevel");
 var events = require('events');
 const { ConfigurationUI } = require('./m32-configuration-ui');
@@ -18,7 +18,7 @@ class M32Main {
     constructor() {
         log.debug("initM32");
 
-        this.mode = MODE_CW_GENERATOR;
+        //this.mode = MODE_CW_GENERATOR;
 
         let m32Storage = new M32Storage();
 
@@ -33,24 +33,25 @@ class M32Main {
         this.cwMemoryUI = new CWMemoryUI(m32CommunicationService);
 
         // Initialize Koch Tutor
-        this.kochTutor = new KochTutor({
-            speedControlElement: document.getElementById('kochSpeed'),
+        this.kochMorseTutor = new KochMorseTutor({
+            speedControlElement: document.getElementById('kochSpeedControl'),
             farnsworthToggleElement: document.getElementById('farnsworthToggle'),
             farnsworthSpeedElement: document.getElementById('farnsworthSpeed'),
             displayElement: document.getElementById('kochDisplay'),
             currentCharElement: document.getElementById('currentChar'),
             groupResultElement: document.getElementById('groupResult'),
-            speedDisplayElement: document.getElementById('speedDisplay')
+            speedDisplayElement: document.getElementById('kochSpeedDisplay')
         });
 
         m32Storage.loadSettings();
 
-        document.getElementById("versionSpan").textContent = VERSION;
+        //document.getElementById("versionSpan").textContent = VERSION;
 
         this.eventEmitter = new events.EventEmitter();
-        this.eventEmitter.addListener(EVENT_MODE_SELECTED, this.echoTrainerUI.modeSelected.bind(this.echoTrainerUI));
-        this.eventEmitter.addListener(EVENT_MODE_SELECTED, this.m32CwGeneratorUI.modeSelected.bind(this.m32CwGeneratorUI));
-        this.eventEmitter.addListener(EVENT_MODE_SELECTED, this.qsoTrainerUI.modeSelected.bind(this.qsoTrainerUI));
+        //this.eventEmitter.addListener(EVENT_MODE_SELECTED, this.echoTrainerUI.modeSelected.bind(this.echoTrainerUI));
+        //this.eventEmitter.addListener(EVENT_MODE_SELECTED, this.m32CwGeneratorUI.modeSelected.bind(this.m32CwGeneratorUI));
+        //this.eventEmitter.addListener(EVENT_MODE_SELECTED, this.qsoTrainerUI.modeSelected.bind(this.qsoTrainerUI));
+        //this.eventEmitter.addListener(EVENT_MODE_SELECTED, this.kochMorseTutor.modeSelected.bind(this.kochMorseTutor));
 
         // enable bootstrap tooltips everywhere:    
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
@@ -59,9 +60,9 @@ class M32Main {
             return new bootstrap.Tooltip(tooltipTriggerEl, { trigger : 'hover' });
         });    
 
-        for (let tabElement of document.querySelectorAll('button[data-bs-toggle="tab"]')) {
+        /*for (let tabElement of document.querySelectorAll('button[data-bs-toggle="tab"]')) {
             tabElement.addEventListener('shown.bs.tab', this.tabEventListener.bind(this));
-        }
+        }*/
 
         let urlParams = new URLSearchParams(window.location.search);
         let paramMode = urlParams.get('mode');
@@ -70,7 +71,7 @@ class M32Main {
             this.openTabForMode(paramMode);
         }
 
-        if (urlParams.get('debug') !== null) {
+        /*if (urlParams.get('debug') !== null) {
             this.m32CwGeneratorUI.setDebug(true);
             this.echoTrainerUI.setDebug(true);
             log.info('debug mode enabled!');
@@ -78,35 +79,46 @@ class M32Main {
             this.m32CwGeneratorUI.setDebug(false);
             this.echoTrainerUI.setDebug(true);
             console.log('debug mode disabled!');
-        }
+        }*/
         let paramM32Language = urlParams.get('language');
         if (paramM32Language) {
             console.log('setting m32language to ', paramM32Language);
             m32CommunicationService.setLanguage(paramM32Language);
         }
 
+        //console.log(document.getElementById('kochSpeedControl'));
+
+        /*document.getElementById('kochSpeedControl').addEventListener('input', () => {
+            //let speedDis = document.getElementById('kochSpeedDisplay');
+            let speed = parseInt(document.getElementById('kochSpeedControl').value, 10);
+            //speedDis.innerText = speed.value;
+            //console.log(speedDis.innerText);
+            this.kochMorseTutor.setMorseSpeed(speed);
+            //this.kochMorseTutor.startLesson();
+        });*/
+
         // Add event listener for Koch Trainer start button
         document.getElementById('startKochTraining').addEventListener('click', () => {
-            const speed = parseInt(document.getElementById('kochSpeed').value, 10);
-            this.kochTutor.setSpeed(speed);
-            this.kochTutor.startLesson();
+            const speed = parseInt(document.getElementById('kochSpeedControl').value, 10);
+            this.kochMorseTutor.setSpeed(speed);
+            this.kochMorseTutor.startLesson();
         });
 
         // Add event listener for Farnsworth toggle
-        document.getElementById('farnsworthToggle').addEventListener('change', (event) => {
+        /*document.getElementById('farnsworthToggle').addEventListener('change', (event) => {
             this.kochTutor.setFarnsworth(event.target.checked);
         });
 
         // Add event listener for Farnsworth speed
         document.getElementById('farnsworthSpeed').addEventListener('input', (event) => {
             this.kochTutor.setFarnsworthSpeed(parseInt(event.target.value, 10));
-        });
+        });*/
     }
 
-    tabEventListener(event) {
+    /*tabEventListener(event) {
         let mode = event.target.id.replace('-tab', '');
         this.eventEmitter.emit(EVENT_MODE_SELECTED, mode);
-    }
+    }*/
 
     openTabForMode(mode) {
         if (mode === MODE_CW_GENERATOR) {

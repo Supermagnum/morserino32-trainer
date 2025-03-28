@@ -50,7 +50,7 @@ class M32CwGeneratorUI {
         
         this.activeMode = true;
 
-        this.savedResultChart = this.createSavedResultChart();
+        //this.savedResultChart = this.createSavedResultChart();
 
         this.m32Storage = m32Storage;
         this.showSavedResults(this.m32Storage.getSavedResults());
@@ -370,7 +370,7 @@ class M32CwGeneratorUI {
     }
 
     // ------------------------------ chart -------------------------------
-    createSavedResultChart() {
+    /*createSavedResultChart() {
         let ctx = document.getElementById('savedResultChart');
         // eslint-disable-next-line no-undef
         return new Chart(ctx, {
@@ -448,7 +448,7 @@ class M32CwGeneratorUI {
             });
 
 
-    }
+    }*/
     
     startSnapshot4() {
         log.debug("starting snapshot 4");
